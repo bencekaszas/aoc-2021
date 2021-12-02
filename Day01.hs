@@ -24,7 +24,7 @@ main = do
     inps <- readFile "inputs/01.txt"
     let strs = lines inps
         xs = map read strs :: [Int]
-    print ("#1: " ++ show (first xs))
-    print ("#2: " ++ show (second xs))
-    
+    print ("Part 1: " ++ show (first xs))
+    print ("Part 2: " ++ show (second xs))
+
 -- let x = map (\x -> read x::Int) (lines inps)
