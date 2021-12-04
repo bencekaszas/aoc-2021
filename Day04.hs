@@ -10,16 +10,25 @@ solution :: [Matrix] -> [Int] -> Int -> String -> (Matrix,Int)
 solution  ms s k mode | and (checkWinner ms (take k s)) && mode == "max" = (extractLoser ms (take k s), last (take k s))
                       | or (checkWinner ms (take k s)) && mode == "min" = (extractSol ms (take k s), last (take k s))
                       | otherwise = solution ms s (k+1) mode
-                        where
-                          extractLoser ms s = last [ (checkSol m s) | m <- ms, not $ isWinner (checkSol m (init s))]
-                          extractSol ms s = head [ (checkSol m s) | m <- ms, isWinner (checkSol m s)]
-                          checkWinner ms s = [ isWinner (checkSol m s) | m <- ms]
-                          checkSol m xs = [ [ if element `elem` xs then 999 else element | element <- row] | row <- m ]
-                          isWinner m | ((replicate 5 999) `elem` m) || ((replicate 5 999) `elem` (transpose m)) = True
-                                     | otherwise = False
 
 totalScore :: (Matrix, Int) -> Int
 totalScore (m,k) = sum[ sum (filter (/= 999) r) | r <- m] * k
+
+extractLoser :: [Matrix] -> [Int] -> Matrix
+extractLoser ms s = last [ (checkSol m s) | m <- ms, not $ isWinner (checkSol m (init s))]
+
+extractSol :: [Matrix] -> [Int] -> Matrix
+extractSol ms s = head [ (checkSol m s) | m <- ms, isWinner (checkSol m s)]
+
+checkWinner :: [Matrix] -> [Int] -> [Bool]
+checkWinner ms s = [ isWinner (checkSol m s) | m <- ms]
+
+checkSol :: Matrix -> [Int] -> Matrix
+checkSol m xs = [ [ if element `elem` xs then 999 else element | element <- row] | row <- m ]
+
+isWinner :: Matrix -> Bool
+isWinner m | ((replicate 5 999) `elem` m) || ((replicate 5 999) `elem` (transpose m)) = True
+           | otherwise = False
 
 stripFifth :: Matrix -> [Matrix]
 stripFifth xs = [ drop (k*5 -5) (take (k*5) xs) | k <- [1..100]]
