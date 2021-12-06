@@ -2,7 +2,7 @@ module Day06 where
 
 import Data.List.Split (splitOn)
 
-grow day xs = (map sum . iterate nextDay . dayCount $ xs) !! day
+grow day xs =  sum ((iterate nextDay . dayCount $ xs) !! day)
   where
     dayCount xs = [length $ filter (== daysLeft) xs | daysLeft <- [0..8]]
     nextDay [zero,one,two,three,four,five,six,seven,eight] = [one, two, three, four, five, six, seven + zero, eight, zero]
