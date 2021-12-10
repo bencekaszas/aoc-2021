@@ -18,6 +18,18 @@ parseCommand s =
     ["down", x] -> Down (read x)
     _ -> error $ "Invalid input: " ++ s
 
+subMatrices :: Int -> [[Int]] -> [[[Int]]]
+subMatrices size = concatMap subsFromRowGroup . rowGroups
+  where
+    rowGroups = chunksOf size
+    subsFromRowGroup = map transpose . chunksOf size . transpose
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf _ [] = []
+chunksOf n xs = ys : chunksOf n zs
+  where
+    (ys, zs) = splitAt n xs
+
 
 main :: IO ()
 main = do
